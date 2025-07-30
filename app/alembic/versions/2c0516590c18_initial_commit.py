@@ -20,21 +20,25 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    op.execute(sa.text("CREATE SCHEMA IF NOT EXISTS public"))
+
     op.create_table('users',
         sa.Column('id', sa.Uuid(), nullable=False),
         sa.Column('email', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
         sa.PrimaryKeyConstraint('id'),
-        # schema='auth'
+        schema='public'
     )
-    op.create_table('item',
+    op.create_table('comments',
         sa.Column('title', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
         sa.Column('description', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=True),
         sa.Column('id', sa.Uuid(), nullable=False),
         sa.Column('owner_id', sa.Uuid(), nullable=False),
-        sa.ForeignKeyConstraint(['owner_id'], ['auth.users.id'], ondelete='CASCADE'),
-        sa.PrimaryKeyConstraint('id')
+        sa.ForeignKeyConstraint(['owner_id'], ['public.users.id'], ondelete='CASCADE'),
+        sa.PrimaryKeyConstraint('id'),
+        schema='public'
     )
 
 
 def downgrade() -> None:
-    op.drop_table('item')
+    op.drop_table('users', schema='public')
+    op.drop_table('comments', schema='public')

@@ -5,7 +5,7 @@ from gotrue import User
 from sqlmodel import Session
 
 from app import crud
-from app.models.item import Item, ItemCreate, ItemUpdate
+from app.models.comment import Comment, CommentCreate, CommentUpdate
 
 fake = Faker()
 
@@ -14,7 +14,7 @@ def test_create_item(db: Session, test_user: User) -> None:
     """Test creating a new item"""
     title = fake.sentence(nb_words=3)
     description = fake.text(max_nb_chars=200)
-    item_in = ItemCreate(title=title, description=description)
+    item_in = CommentCreate(title=title, description=description)
 
     item = crud.item.create(db, owner_id=uuid.UUID(test_user.id), obj_in=item_in)
 
@@ -24,7 +24,7 @@ def test_create_item(db: Session, test_user: User) -> None:
     assert item.owner_id == uuid.UUID(test_user.id)
 
 
-def test_get_item(db: Session, test_item: Item) -> None:
+def test_get_item(db: Session, test_item: Comment) -> None:
     """Test retrieving a single item"""
     stored_item = crud.item.get(db, id=test_item.id)
 
@@ -40,7 +40,7 @@ def test_get_multi_items(db: Session, test_user: User) -> None:
     # Create multiple items
     items = []
     for _ in range(5):
-        item_in = ItemCreate(
+        item_in = CommentCreate(
             title=fake.sentence(nb_words=3), description=fake.text(max_nb_chars=200)
         )
         item = crud.item.create(db, owner_id=uuid.UUID(test_user.id), obj_in=item_in)
@@ -52,11 +52,11 @@ def test_get_multi_items(db: Session, test_user: User) -> None:
     assert all(item in stored_items for item in items)
 
 
-def test_update_item(db: Session, test_item: Item) -> None:
+def test_update_item(db: Session, test_item: Comment) -> None:
     """Test updating an item"""
     new_title = fake.sentence(nb_words=3)
     new_description = fake.text(max_nb_chars=200)
-    update_data = ItemUpdate(title=new_title, description=new_description)
+    update_data = CommentUpdate(title=new_title, description=new_description)
 
     updated_item = crud.item.update(db, id=test_item.id, obj_in=update_data)
 
@@ -71,7 +71,7 @@ def test_update_item(db: Session, test_item: Item) -> None:
     assert updated_item is None
 
 
-def test_delete_item(db: Session, test_item: Item) -> None:
+def test_delete_item(db: Session, test_item: Comment) -> None:
     """Test deleting an item"""
     deleted_item = crud.item.remove(db, id=test_item.id)
     assert deleted_item is not None

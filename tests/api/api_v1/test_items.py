@@ -2,7 +2,7 @@ from faker import Faker
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
-from app.models.item import Item, ItemCreate, ItemUpdate
+from app.models.comment import Comment, CommentCreate, CommentUpdate
 from app.schemas.auth import Token
 from tests.utils import get_auth_header
 
@@ -14,7 +14,7 @@ def test_create_item(client: TestClient, token: Token) -> None:
     # Prepare test data
     title = fake.sentence(nb_words=3)
     description = fake.text(max_nb_chars=200)
-    item_in = ItemCreate(title=title, description=description)
+    item_in = CommentCreate(title=title, description=description)
 
     # Make request
     response = client.post(
@@ -33,7 +33,7 @@ def test_create_item(client: TestClient, token: Token) -> None:
     assert "owner_id" in data
 
 
-def test_get_item(client: TestClient, token: Token, test_item: Item) -> None:
+def test_get_item(client: TestClient, token: Token, test_item: Comment) -> None:
     """Test get item by id endpoint"""
     # Make request
     response = client.get(
@@ -50,7 +50,7 @@ def test_get_item(client: TestClient, token: Token, test_item: Item) -> None:
     assert data["owner_id"] == str(test_item.owner_id)
 
 
-def test_get_items(client: TestClient, token: Token, test_item: Item) -> None:
+def test_get_items(client: TestClient, token: Token, test_item: Comment) -> None:
     """Test get items list endpoint"""
     # Make request
     response = client.get(
@@ -69,12 +69,12 @@ def test_get_items(client: TestClient, token: Token, test_item: Item) -> None:
     assert str(test_item.id) in item_ids
 
 
-def test_update_item(client: TestClient, token: Token, test_item: Item) -> None:
+def test_update_item(client: TestClient, token: Token, test_item: Comment) -> None:
     """Test update item endpoint"""
     # Prepare update data
     new_title = fake.sentence(nb_words=3)
     new_description = fake.text(max_nb_chars=200)
-    item_update = ItemUpdate(title=new_title, description=new_description)
+    item_update = CommentUpdate(title=new_title, description=new_description)
 
     # Make request
     response = client.put(

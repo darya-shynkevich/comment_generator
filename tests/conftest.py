@@ -12,7 +12,7 @@ from app import crud
 from app.core.config import settings
 from app.core.db import engine, init_db
 from app.main import app
-from app.models.item import Item, ItemCreate
+from app.models.comment import Comment, CommentCreate
 from app.schemas.auth import Token
 
 
@@ -21,7 +21,7 @@ def db() -> Generator[Session, None]:
     with Session(engine) as session:
         init_db(session)
         yield session
-        statement = delete(Item)
+        statement = delete(Comment)
         session.exec(statement)  # type: ignore
         session.commit()
 
@@ -60,8 +60,8 @@ def test_user(super_client: Client) -> Generator[User, None]:
 
 
 @pytest.fixture(scope="function")
-def test_item(db: Session, test_user: User) -> Generator[Item, None]:
-    item_in = ItemCreate(
+def test_item(db: Session, test_user: User) -> Generator[Comment, None]:
+    item_in = CommentCreate(
         title=fake.sentence(nb_words=3), description=fake.text(max_nb_chars=200)
     )
     yield crud.item.create(db, owner_id=uuid.UUID(test_user.id), obj_in=item_in)

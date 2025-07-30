@@ -1,4 +1,4 @@
-from .item import Item
+from .comment import Comment
 from .user import User
 
-__all__ = ["User", "Item"]
+__all__ = ["User", "Comment"]

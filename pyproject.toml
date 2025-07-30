@@ -14,6 +14,7 @@ dependencies = [
     "tenacity>=9.0.0",
     "psycopg2-binary>=2.9.10",
     "psycopg>=3.2.4",
+    "supadantic>=0.0.11"
 ]
 
 [dependency-groups]

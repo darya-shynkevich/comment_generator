@@ -1,12 +1,10 @@
 import uuid
 
-from pydantic import EmailStr
-from sqlmodel import Field, SQLModel
+from pydantic import EmailStr, Field
+from supadantic.models import BaseSBModel
 
 
-class User(SQLModel, table=True):
-    """NOTE: do not migrate with alembic with it"""
-
+class User(BaseSBModel):
     __tablename__ = "users"
     __table_args__ = {"schema": "auth", "keep_existing": True}
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)

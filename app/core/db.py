@@ -4,7 +4,7 @@ from sqlmodel import Session, create_engine, select
 from supabase import create_client
 
 from app.core.config import settings
-from app.models import User
+from app.models import User, Comment
 
 # make sure all SQLModel models are imported (app.models) before initializing DB
 # otherwise, SQLModel might fail to initialize relationships properly
@@ -25,6 +25,10 @@ def init_db(session: Session) -> None:
     # from sqlmodel import SQLModel
     # # This works because the models are already imported and registered from app.models
     # SQLModel.metadata.create_all(engine)
+    Comment.objects.all()
+    breakpoint()
+
+    result = User.objects.filter(email=settings.FIRST_SUPERUSER).first()
 
     result = session.exec(select(User).where(User.email == settings.FIRST_SUPERUSER))
     user = result.first()

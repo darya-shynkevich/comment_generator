@@ -20,7 +20,6 @@ class CommentUpdate(CommentBase):
 
 
 class Comment(BasicDBModel, CommentBase):
-    __tablename__ = "comments"
     __table_args__ = {
         "schema": "public",
         "keep_existing": True

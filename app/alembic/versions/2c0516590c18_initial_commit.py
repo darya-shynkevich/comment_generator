@@ -20,25 +20,22 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.execute(sa.text("CREATE SCHEMA IF NOT EXISTS public"))
-
-    op.create_table('users',
-        sa.Column('id', sa.Uuid(), nullable=False),
-        sa.Column('email', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
-        sa.PrimaryKeyConstraint('id'),
-        schema='public'
+    op.create_table('user',
+    sa.Column('id', sa.UUID(), autoincrement=False, nullable=False, server_default=sa.text('gen_random_uuid()')),
+    sa.Column('email', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.PrimaryKeyConstraint('id', name='users_pkey'),
+    postgresql_ignore_search_path=False
     )
-    op.create_table('comments',
-        sa.Column('title', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
-        sa.Column('description', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=True),
-        sa.Column('id', sa.Uuid(), nullable=False),
-        sa.Column('owner_id', sa.Uuid(), nullable=False),
-        sa.ForeignKeyConstraint(['owner_id'], ['public.users.id'], ondelete='CASCADE'),
-        sa.PrimaryKeyConstraint('id'),
-        schema='public'
+    op.create_table('comment',
+    sa.Column('title', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('description', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('id', sa.UUID(), autoincrement=False, nullable=False),
+    sa.Column('owner_id', sa.UUID(), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['owner_id'], ['user.id'], name='comments_owner_id_fkey', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name='comments_pkey')
     )
 
 
 def downgrade() -> None:
-    op.drop_table('users', schema='public')
-    op.drop_table('comments', schema='public')
+    op.drop_table('comment')
+    op.drop_table('user')

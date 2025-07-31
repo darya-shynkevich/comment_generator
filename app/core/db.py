@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Generator
 
 from sqlmodel import Session, create_engine, select
@@ -25,7 +26,11 @@ def init_db(session: Session) -> None:
     # from sqlmodel import SQLModel
     # # This works because the models are already imported and registered from app.models
     # SQLModel.metadata.create_all(engine)
-    Comment.objects.all()
+    user = User.objects.create(email="email@gmail.com")
+    User.objects.filter(email="email@gmail.com").update(email="updated_email@gmail.com")
+    print(user)
+    user.refresh_from_db()
+    print(user)
     breakpoint()
 
     result = User.objects.filter(email=settings.FIRST_SUPERUSER).first()

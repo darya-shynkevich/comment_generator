@@ -48,7 +48,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Set the default command
 # Ref: https://fastapi.tiangolo.com/deployment/docker/
-CMD ["fastapi", "run", "app/main.py", "--port", "80"]
+CMD ["fastapi", "run", "main.py", "--port", "80", "--reload"]
 
 # If running behind a proxy like Nginx or Traefik add --proxy-headers
 # CMD ["fastapi", "run", "app/main.py", "--port", "80", "--proxy-headers"]

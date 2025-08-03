@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
 
-from app.core.config import settings
+from config import settings
 
 
-def test_get_item(client: TestClient) -> None:
-    """Test get item by id endpoint"""
+def test_health_check(client: TestClient) -> None:
+    """Test health-check endpoint"""
     # Make request
     response = client.get(f"{settings.API_V1_STR}/utils/health-check/")
 

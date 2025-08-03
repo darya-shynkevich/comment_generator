@@ -9,8 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from uvicorn.config import LOGGING_CONFIG
 
 from app.api.main import api_router
-from app.core.config import settings
 from app.utils import custom_generate_unique_id
+from config import settings
 
 logger = logging.getLogger("uvicorn")
 
@@ -25,7 +25,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa ARG001
         logger.info("lifespan exit")
 
 
-# init FastAPI with lifespan
 app = FastAPI(
     lifespan=lifespan,
     title=settings.PROJECT_NAME,
@@ -34,7 +33,6 @@ app = FastAPI(
 )
 
 
-# Set all CORS enabled origins
 if settings.all_cors_origins:
     app.add_middleware(
         CORSMiddleware,

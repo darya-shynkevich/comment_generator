@@ -1,15 +1,24 @@
-# FastAPI Supbase Template
+# Comment generator services
 
-## Environment
+- Based on FastAPI Supbase Template
+- Generates comment about given words
 
-### Python
-
-> [uv](https://github.com/astral-sh/uv) is an extremely fast Python package and project manager, written in Rust.
+## Usage
 
 ```bash
-cd backend
-uv sync --all-groups --dev
+curl --location 'http://0.0.0.0:8000/api/v1/comments/' \
+--header 'Content-Type: application/json' \
+--data '{"keywords": ["lovely", "husband"]}'
 ```
+
+```bash
+curl --location 'http://0.0.0.0:8000/api/v1/comments/'
+```
+
+## Configuration and launch
+
+This projects uses the following standard tools:
+> [uv](https://github.com/astral-sh/uv) is an extremely fast Python package and project manager, written in Rust.
 
 ### [Supabase](https://supabase.com/docs/guides/local-development/cli/getting-started?queryGroups=platform&platform=linux&queryGroups=access-method&access-method=postgres)
 
@@ -27,45 +36,52 @@ launch supabase docker containers
 supabase start
 ```
 
-> [!NOTE]
->```bash
-># Update `.env`
->bash scripts/update-env.sh
->```
-> modify the `.env` from the output of `supabase start` or run `supabase status` manually.
+### Environment variables
 
-## Test
+Generate `.env` file based on `example.env` file
+
+### Dependencies installation
 
 ```bash
-cd backend
-# test connection of db and migration
-scripts/pre-start.sh
-# unit test
-scripts/test.sh
-# test connection of db and test code
-scripts/tests-start.sh
+uv sync --all-groups --dev
+```
+
+### Migrations
+
+```bash
+make migrate
+```
+
+```bash
+make downgrade
+```
+
+```bash
+make migrations
+```
+
+### Test
+
+```bash
+make test
+```
+
+### Launch
+
+```bash
+make start
 ```
 
 ## Docker
 
-> [!note]
-> `atticux/fastapi_supabase_template` is your image tag name, remember replace it with yours
-
 build
 
 ```bash
-cd backend
-docker build -t atticux/fastapi_supabase_template .
+make docker-build
 ```
 
 test
 
 ```bash
-bash scripts/update-env.sh
-supabase start
-cd backend
-docker run --network host \
-  --env-file ../.env \
-  -it atticux/fastapi_supabase_template:latest \
-  bash -c "sh scripts/pre-start.sh && sh scripts/tests-start.sh"
+make docker-start
 ```
